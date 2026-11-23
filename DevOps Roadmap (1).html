@@ -46,6 +46,12 @@ input:checked+span{color:var(--muted);text-decoration:line-through}
 .tools{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
 .tools b{font-weight:500;font-size:.85rem;border:1px solid var(--c);border-radius:999px;padding:2px 12px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink)}
 .proj{margin:0;padding:10px 12px;border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--surface));border-radius:0 8px 8px 0;font-size:.95rem}
+details.ex{background:none;border:0;border-radius:0;box-shadow:none;margin:0 0 8px 36px}
+.ex summary{display:block;padding:2px 0;font-size:.85rem;font-weight:500;color:var(--c)}
+.ex summary::before{content:"▸ "}.ex[open] summary::before{content:"▾ "}
+.ex p{margin:6px 0;font-size:.95rem}
+.ex pre{margin:0;padding:12px 14px;background:#101a2c;color:#e6eef7;border-radius:10px;border-left:4px solid var(--c);overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.mist{margin-top:8px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,#ff5a5f 15%,transparent)}
 footer{margin-top:40px;color:var(--muted);font-size:.9rem}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
@@ -72,6 +78,216 @@ var STAGES=[
 {t:"Observability and security",s:"Know what is happening and keep it safe",tools:["Prometheus","Grafana","Trivy","Vault"],topics:["Metrics, logs, and traces: what each one answers","Prometheus and Grafana dashboards and alerting","Centralized logging with ELK or Loki","Image and dependency scanning with Trivy","Secrets management: AWS Secrets Manager, Vault","Network policies, WAF, and Security Hub","Alert routing and on-call basics"],p:"Add Prometheus, Grafana, and a Trivy scan stage to your existing pipeline."},
 {t:"Reliability and platform",s:"Run it at scale, then make it easy for others",tools:["ArgoCD","SRE","FinOps","Multi-account"],topics:["GitOps with ArgoCD or Flux","SLIs, SLOs, and error budgets","Incident response and blameless postmortems","Backup, disaster recovery, and multi-AZ design","AWS Organizations and multi-account landing zones","Cost monitoring and right-sizing","Internal developer platforms and self-service templates"],p:"Run a game day: break a node or an AZ on purpose and write the postmortem."}
 ];
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+var DETAILS=[
+[
+[`Everything lives under /. Permissions are read, write, execute for owner, group and others. systemd starts and stops services.`,`ls -l /var/log
+chmod 640 app.log
+chown ubuntu:dev app.log
+ps aux | grep nginx
+sudo systemctl status nginx`],
+[`DNS turns names into IPs, TCP carries traffic on ports, HTTPS adds TLS. Most outages are DNS, ports or firewalls.`,`dig example.com +short
+curl -I https://example.com
+nc -zv 10.0.1.5 3306`],
+[`Put repeated commands in a script and schedule it with cron.`,`#!/bin/bash
+tar -czf backup.tar.gz /data
+aws s3 cp backup.tar.gz s3://my-bucket/
+# cron: 0 2 * * * /opt/backup.sh`],
+[`One branch per feature, open a pull request, merge after review.`,`git checkout -b feature/login
+git add . && git commit -m 'Add login'
+git push -u origin feature/login`],
+[`Use Python when Bash gets long, for example to call the AWS API with boto3.`,`import boto3
+ec2 = boto3.client('ec2')
+for r in ec2.describe_instances()['Reservations']:
+    print(r['Instances'][0]['InstanceId'])`],
+[`Key pairs replace passwords. Keep the private key safe and disable password login.`,`ssh-keygen -t ed25519
+ssh -i ~/.ssh/key.pem ec2-user@10.0.1.10`]
+],
+[
+[`Give each user or service only the permissions it needs. Prefer roles over long-lived access keys.`,`aws iam create-role --role-name ec2-s3-read --assume-role-policy-document file://trust.json
+aws iam attach-role-policy --role-name ec2-s3-read --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess`],
+[`Your private network. Public subnets route to an Internet Gateway, private subnets go out through a NAT gateway.`,`VPC 10.0.0.0/16
+Public subnet 10.0.1.0/24 -> Internet Gateway
+Private subnet 10.0.2.0/24 -> NAT Gateway`],
+[`Auto Scaling adds or removes EC2 instances. The load balancer spreads traffic across them.`,`aws autoscaling create-auto-scaling-group --auto-scaling-group-name web-asg --min-size 2 --max-size 4 --launch-template LaunchTemplateName=web-lt`],
+[`S3 for files and backups, EBS for one instance's disk, EFS for files shared by many instances.`,`aws s3 sync ./build s3://my-site-bucket --delete`],
+[`Managed MySQL or PostgreSQL with automatic backups and Multi-AZ. Keep it in private subnets.`,`mysql -h bookingdb.xxxx.ap-south-1.rds.amazonaws.com -u admin -p`],
+[`Route 53 points your domain to CloudFront or a load balancer. ACM gives free HTTPS certificates.`,`app.example.com  A (Alias)  ->  d111abcd.cloudfront.net`],
+[`Collect metrics and logs, then raise an alarm when a value crosses a limit.`,`aws cloudwatch put-metric-alarm --alarm-name high-cpu --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 300 --threshold 80 --comparison-operator GreaterThanThreshold --evaluation-periods 2`]
+],
+[
+[`Describe infrastructure in .tf files, then plan and apply.`,`resource "aws_instance" "web" {
+  ami           = "ami-0abc"
+  instance_type = "t3.micro"
+}
+
+terraform init && terraform plan && terraform apply`],
+[`Modules reuse code. Remote state in S3 with DynamoDB locking lets a team work safely.`,`terraform {
+  backend "s3" {
+    bucket         = "my-tf-state"
+    key            = "prod/terraform.tfstate"
+    region         = "ap-south-1"
+    dynamodb_table = "tf-lock"
+  }
+}`],
+[`Same code, separate state for each environment.`,`terraform workspace new dev
+terraform apply -var-file=dev.tfvars`],
+[`AWS native IaC. A change set shows what will change before you deploy.`,`aws cloudformation deploy --template-file vpc.yaml --stack-name vpc-stack`],
+[`Playbooks configure servers. Vault encrypts secrets.`,`- hosts: web
+  tasks:
+    - name: Install nginx
+      apt: name=nginx state=present
+
+ansible-vault encrypt secrets.yml`],
+[`Scan your code for insecure settings before applying.`,`tfsec .
+checkov -d .`]
+],
+[
+[`A pipeline moves code through build, test, scan, package and deploy without manual steps.`,`Push -> Build -> Unit tests -> SonarQube scan -> Docker image -> Deploy`],
+[`A Jenkinsfile keeps the pipeline in Git. Keep passwords in Jenkins credentials, never in code.`,`pipeline {
+  agent any
+  stages {
+    stage('Build') { steps { sh 'mvn clean package' } }
+    stage('Test')  { steps { sh 'mvn test' } }
+  }
+}`],
+[`Workflow files in .github/workflows run on push or pull request.`,`on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci && npm run build`],
+[`Store built images in Docker Hub or ECR with a version tag.`,`docker build -t myuser/app:1.0 .
+docker push myuser/app:1.0`],
+[`SSH needs port 22 and keys. SSM Run Command reaches a private EC2 with no inbound port.`,`aws ssm send-command --instance-ids i-0abc --document-name AWS-RunShellScript --parameters 'commands=["docker pull myuser/app:1.0"]'`],
+[`Blue-green runs the new version beside the old one, then switches traffic. Rolling updates replace instances a few at a time.`,`Blue (v1) live -> deploy Green (v2) -> test -> switch load balancer to Green -> keep Blue for rollback`],
+[`Stop the pipeline when tests fail or code quality drops.`,`sonar.qualitygate.wait=true
+mvn test   # build stops on any failed test`]
+],
+[
+[`Multi-stage builds keep the final image small.`,`FROM node:20 AS build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html`],
+[`Compose runs several containers together. Volumes keep data after a restart.`,`services:
+  db:
+    image: mysql:8
+    volumes: [dbdata:/var/lib/mysql]
+  app:
+    image: myuser/app:1.0
+    ports: ["8080:8080"]`],
+[`A Deployment keeps pods running, a Service gives them a stable address, Ingress exposes them outside.`,`kubectl create deployment web --image=nginx --replicas=3
+kubectl expose deployment web --port=80
+kubectl get pods`],
+[`ConfigMap holds settings, Secret holds passwords, a PVC gives pods persistent disk.`,`kubectl create configmap app-config --from-literal=ENV=prod
+kubectl create secret generic db-pass --from-literal=password=ChangeMe123`],
+[`EKS runs the control plane for you. Terraform creates the cluster and node groups.`,`aws eks update-kubeconfig --name devops-eks --region ap-south-1
+kubectl get nodes`],
+[`Helm packages Kubernetes YAML as reusable charts.`,`helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install mydb bitnami/mysql`],
+[`HPA adds pods under load. Cluster Autoscaler adds nodes when pods do not fit.`,`kubectl autoscale deployment web --cpu-percent=70 --min=2 --max=10`]
+],
+[
+[`Metrics say something is wrong, logs say what happened, traces say where it was slow.`,`Metric: CPU 95%
+Log:    ERROR DB timeout
+Trace:  checkout -> payment took 4.2s`],
+[`Prometheus collects metrics, Grafana draws them, Alertmanager sends alerts.`,`rate(http_requests_total[5m])
+# alert if the error rate stays above 5% for 10 minutes`],
+[`Ship logs from every pod to one searchable place.`,`Fluent Bit -> Loki or Elasticsearch -> Grafana or Kibana
+Search: level=error app=checkout`],
+[`Scan images and dependencies for known vulnerabilities inside the pipeline.`,`trivy image --severity HIGH,CRITICAL --exit-code 1 myuser/app:1.0`],
+[`Never hardcode passwords. Fetch them when the app runs.`,`aws secretsmanager get-secret-value --secret-id prod/db --query SecretString --output text`],
+[`Allow only the traffic you need. WAF blocks web attacks, Security Hub collects findings.`,`Frontend SG: allow 80/443 from anywhere
+Backend SG:  allow 8080 only from Frontend SG
+DB SG:       allow 3306 only from Backend SG`],
+[`Send each alert to the right person with a clear severity so on-call is not flooded.`,`Critical -> phone call
+Warning  -> Slack channel
+Info     -> dashboard only`]
+],
+[
+[`Git is the source of truth. ArgoCD keeps the cluster matching it.`,`argocd app create web --repo https://github.com/me/k8s-manifests --path web --dest-server https://kubernetes.default.svc --dest-namespace prod --sync-policy automated`],
+[`SLI is what you measure, SLO is the target, the error budget is the failure you can afford.`,`SLI:    successful requests / total requests
+SLO:    99.9% per month
+Budget: about 43 minutes of downtime per month`],
+[`Fix first, then write a blameless postmortem about the system, not the person.`,`Timeline -> Impact -> Root cause -> What went well -> Action items with owners`],
+[`Spread across two AZs and test your restores. RPO is the data loss you accept, RTO is the downtime you accept.`,`RDS Multi-AZ: on
+ASG subnets: ap-south-1a and ap-south-1b
+Restore test: monthly`],
+[`Separate accounts for dev, staging, prod and security limit the damage of a mistake.`,`Root -> OU Workloads -> dev account, prod account
+Root -> OU Security -> logging account`],
+[`Tag resources, set budgets, stop idle ones and right-size instances.`,`Tag every resource: Project=devops-eks, Env=dev
+Monthly budget alert at 80%
+Stop dev EC2 instances at night`],
+[`Give developers templates so they can create a service without waiting for ops.`,`Template new-service -> creates repo + Jenkinsfile + Terraform + dashboard in one click`]
+]
+];
+var EXTRA=[
+[
+[`Every server problem starts with files, processes and permissions, so this is your daily toolkit.`,`Using chmod 777 to fix a permission error. Find the right owner and mode instead.`],
+[`You cannot debug cloud problems without knowing how a request travels from browser to server.`,`Blaming the app when the real cause is a closed port or a wrong DNS record.`],
+[`Scripts save hours and make tasks repeatable, which is the heart of DevOps.`,`Writing scripts with no error checks. Add set -e so the script stops on the first failure.`],
+[`Git is the record of every change and it triggers your CI/CD pipelines.`,`Committing directly to main, or committing secrets and .pem files.`],
+[`Python lets you build tools that Bash cannot do cleanly, such as reports and API automation.`,`Hardcoding AWS keys in the script. Use an IAM role or environment variables.`],
+[`Safe remote access is how you reach every server you manage.`,`Leaving port 22 open to the whole internet. Limit it to your own IP.`]
+],
+[
+[`IAM controls who can do what in AWS. Most cloud breaches come from loose permissions.`,`Attaching AdministratorAccess to everything. Start with no access and add only what is needed.`],
+[`Every AWS service sits inside a network, and a good VPC keeps databases private.`,`Putting databases in public subnets. Only load balancers and frontends should be public.`],
+[`This is how apps stay online and handle more users without manual work.`,`Running one instance in one AZ. Use at least two AZs.`],
+[`Picking the right storage controls cost and speed.`,`Making an S3 bucket public by accident. Keep Block Public Access on.`],
+[`Databases hold your real data, so backups and availability matter most here.`,`Skipping backups, or putting the database password in code.`],
+[`Users need a friendly name and a secure connection to reach your app.`,`Letting certificates expire. ACM renews its own certificates automatically.`],
+[`You cannot fix what you cannot see. Alarms tell you before users complain.`,`Creating too many alarms. Alert only on what needs action.`]
+],
+[
+[`Code can be reviewed, repeated and rolled back, unlike manual console clicks.`,`Editing resources in the console after Terraform created them. This causes drift.`],
+[`State is the memory of Terraform. If it is lost or shared badly, your infrastructure breaks.`,`Keeping the state file on a laptop or committing it to Git.`],
+[`Dev, test and prod should use the same code with different values.`,`Copying folders for each environment, so they slowly become different.`],
+[`CloudFormation is common in AWS-only teams, and interviews ask about it.`,`Deploying without checking the change set and deleting a resource by mistake.`],
+[`Terraform builds servers, Ansible configures what runs inside them.`,`Storing plain-text passwords in playbooks. Encrypt them with Vault.`],
+[`Finding a wide-open security group before deploy is cheaper than fixing it after.`,`Ignoring warnings. Fix them, or write down why they are accepted.`]
+],
+[
+[`Automation removes human error and lets teams release many times a day.`,`Building one big pipeline step. Split it so you see exactly where it failed.`],
+[`Jenkins is still used in many companies, so it is worth knowing well.`,`Saving passwords in the Jenkinsfile instead of Jenkins credentials.`],
+[`GitHub Actions is built into GitHub and is easy to start with.`,`Using a floating tag for actions. Pin a version such as v4.`],
+[`A registry makes the same image available to every server and environment.`,`Using only the latest tag. Use version tags so you can roll back.`],
+[`How you deploy decides how secure and simple your pipeline is.`,`Opening SSH to the world for deployments. Use SSM or restrict by IP.`],
+[`Users should not see downtime during a release, and rollback should be quick.`,`Deleting the old version too early, leaving no way to roll back.`],
+[`Gates catch bugs and bad code before they reach production.`,`Setting gates so loose that they never fail, which makes them useless.`]
+],
+[
+[`Small images start faster and have fewer security holes.`,`Running as root and copying the whole project, including node_modules and .git.`],
+[`Real apps have several parts, and Compose runs them all with one command.`,`Keeping database data inside the container, so it is lost on removal.`],
+[`These are the building blocks of every Kubernetes app.`,`Creating bare pods. Use a Deployment so failed pods are replaced.`],
+[`Apps need settings and secrets without rebuilding the image.`,`Treating Kubernetes Secrets as encrypted. They are only base64 encoded by default.`],
+[`EKS is the standard way to run Kubernetes on AWS.`,`Forgetting to delete the cluster after practice, which costs money every hour.`],
+[`Helm avoids copying large YAML files and makes upgrades and rollbacks easy.`,`Installing charts with default values in production without reading them.`],
+[`Apps must handle traffic spikes without you being awake.`,`Autoscaling without resource requests set on pods, so the HPA cannot work.`]
+],
+[
+[`These three signals together tell the full story of a problem.`,`Looking only at metrics and guessing the cause.`],
+[`Dashboards and alerts show problems before customers report them.`,`Building pretty dashboards with no alerts attached.`],
+[`When a pod dies its logs vanish, so central logging is required.`,`Logging everything, including passwords, and keeping logs forever.`],
+[`Old libraries with known bugs are a common way attackers get in.`,`Scanning only at the end. Scan on every build and fail on critical findings.`],
+[`Leaked secrets in Git are one of the most common real incidents.`,`Putting secrets in environment variables inside the Dockerfile.`],
+[`Layered rules mean one mistake does not expose everything.`,`Allowing 0.0.0.0/0 on database ports.`],
+[`Too many alerts cause alert fatigue, and real problems get ignored.`,`Alerting on causes like high CPU instead of symptoms like slow responses.`]
+],
+[
+[`Git history becomes an audit trail, and drift gets corrected automatically.`,`Making manual kubectl changes that ArgoCD then overwrites.`],
+[`SLOs turn vague goals like fast and reliable into numbers teams can agree on.`,`Aiming for 100%. It is impossible and very expensive.`],
+[`Every incident is a chance to make the system safer.`,`Blaming a person instead of fixing the missing check or process.`],
+[`Cloud zones fail sometimes, and a tested plan saves the business.`,`Having backups but never testing a restore.`],
+[`Accounts are the strongest security boundary in AWS.`,`Running dev and prod in the same account.`],
+[`Cloud bills grow quietly, and finance teams notice before engineers do.`,`Leaving unused EBS volumes, old snapshots and idle load balancers running.`],
+[`Good platforms make the safe way the easy way for every developer.`,`Building a platform nobody asked for. Start from developer pain points.`]
+]
+];
 var KEY="devops-roadmap-v1",done={};
 try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
@@ -82,7 +298,7 @@ STAGES.forEach(function(st,si){
   var h='<span class="dot">'+(si+1)+'</span><details'+(si===0?' open':'')+'><summary><div><h2>'+st.t+'</h2><p>'+st.s+'</p></div><span class="count"></span></summary><div class="body"><div class="tools">';
   st.tools.forEach(function(t){h+='<b>'+t+'</b>'});
   h+='</div><ul class="topics">';
-  st.topics.forEach(function(tp,ti){var id=si+"-"+ti;h+='<li><label><input type="checkbox" data-id="'+id+'"'+(done[id]?' checked':'')+'><span>'+tp+'</span></label></li>'});
+  st.topics.forEach(function(tp,ti){var id=si+"-"+ti;var d=DETAILS[si][ti],x=EXTRA[si][ti];h+='<li><label><input type="checkbox" data-id="'+id+'"'+(done[id]?' checked':'')+'><span>'+tp+'</span></label><details class="ex"><summary>Explain + example</summary><p>'+esc(d[0])+'</p><p><strong>Why it matters:</strong> '+esc(x[0])+'</p><pre><code>'+esc(d[1])+'</code></pre><p class="mist"><strong>Common mistake:</strong> '+esc(x[1])+'</p></details></li>'});
   h+='</ul><p class="proj"><strong>Project:</strong> '+st.p+'</p></div></details>';
   li.innerHTML=h;track.appendChild(li);
 });
