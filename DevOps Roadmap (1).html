@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DevOps Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f6;--surface:#fff;--ink:#14213d;--muted:#5b6b82;--line:#c5d2de;--accent:#0b7a75;--accent-ink:#fff;--mark:#f2a900;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a2b;--surface:#162338;--ink:#e6eef7;--muted:#9fb0c6;--line:#2c3f5a;--accent:#3fd0c6;--accent-ink:#06201e;--mark:#f5b932}}
+:root[data-theme="dark"]{--bg:#0e1a2b;--surface:#162338;--ink:#e6eef7;--muted:#9fb0c6;--line:#2c3f5a;--accent:#3fd0c6;--accent-ink:#06201e;--mark:#f5b932}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(900px 500px at 8% -5%,rgba(255,90,95,.22),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(67,97,238,.22),transparent 60%),radial-gradient(700px 500px at 50% 100%,rgba(46,194,126,.18),transparent 60%),var(--bg);background-attachment:fixed;color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:48px 20px 80px}
+h1{font:800 clamp(2.6rem,8vw,4.8rem)/1.05 "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 16px;letter-spacing:-.02em;background:linear-gradient(90deg,#ff5a5f,#ff9f1c,#f4c20d,#2ec27e,#12b5cb,#4361ee,#9b5de5);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.lede{max-width:56ch;color:var(--muted);margin:0 0 28px}
+.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:44px}
+.bar{flex:1;min-width:200px;height:12px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar{height:14px;border-radius:7px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff5a5f,#ff9f1c,#f4c20d,#2ec27e,#12b5cb,#4361ee,#9b5de5);background-size:100vw 100%;border-radius:7px;transition:width .35s}
+.pct{font:700 1.1rem "Bricolage Grotesque",sans-serif;min-width:5ch}
+button{font:inherit;cursor:pointer}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px}
+.reset:hover{color:var(--ink);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+.track{position:relative;margin:0;padding:0;list-style:none}
+.track::before{content:"";position:absolute;left:19px;top:10px;bottom:10px;width:5px;background:linear-gradient(#ff5a5f,#ff9f1c,#f4c20d,#2ec27e,#12b5cb,#4361ee,#9b5de5);border-radius:3px;opacity:.85}
+.stage{position:relative;padding-left:60px;margin-bottom:22px}
+.dot{position:absolute;left:5px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:4px solid var(--c);display:grid;place-items:center;font:800 .85rem "Bricolage Grotesque",sans-serif;color:var(--c)}
+.stage.done .dot{background:var(--c);color:#fff;box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 30%,transparent)}
+.stage.part .dot{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+details{background:color-mix(in srgb,var(--c) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 35%,var(--line));border-top:6px solid var(--c);border-radius:16px;box-shadow:0 6px 20px color-mix(in srgb,var(--c) 14%,transparent)}
+summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary h2{font:800 1.35rem "Bricolage Grotesque",sans-serif;margin:0;color:var(--c)}
+summary p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.count{font-size:.8rem;font-weight:500;white-space:nowrap;background:var(--c);color:#fff;border-radius:999px;padding:2px 12px}
+.body{padding:0 18px 18px;border-top:1px dashed color-mix(in srgb,var(--c) 45%,transparent)}
+.topics{list-style:none;margin:14px 0;padding:0;display:grid;gap:4px}
+label{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;border-radius:8px;cursor:pointer}
+label:hover{background:color-mix(in srgb,var(--c) 14%,transparent)}
+input[type=checkbox]{accent-color:var(--c);width:18px;height:18px;margin-top:3px;flex:none}
+input:checked+span{color:var(--muted);text-decoration:line-through}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.tools b{font-weight:500;font-size:.85rem;border:1px solid var(--c);border-radius:999px;padding:2px 12px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink)}
+.proj{margin:0;padding:10px 12px;border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--surface));border-radius:0 8px 8px 0;font-size:.95rem}
+footer{margin-top:40px;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DevOps roadmap</h1>
+  <p class="lede">Seven stages from Linux basics to running production platforms on AWS. Tick topics off as you learn them; your progress stays in this browser.</p>
+  <div class="top">
+    <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" id="pbar"><i id="fill"></i></div>
+    <span class="pct" id="pct">0%</span>
+    <button class="reset" id="reset" type="button">Reset progress</button>
+  </div>
+  <ol class="track" id="track"></ol>
+  <footer>Build one project per stage and push it to GitHub. A visible repo beats a long list of certificates.</footer>
+</div>
+<script>
+var STAGES=[
+{t:"Foundations",s:"The base everything else sits on",tools:["Linux","Bash","Git","Python"],topics:["Linux filesystem, permissions, processes, systemd","Networking: TCP/IP, DNS, HTTP/HTTPS, load balancing, firewalls","Bash scripting and cron","Git branching, pull requests, merge conflicts","Basic Python or Go for automation","SSH, keys, and secure remote access"],p:"Write a Bash script that backs up a folder and uploads it to S3 on a schedule."},
+{t:"Cloud with AWS",s:"Core services you will use daily",tools:["IAM","VPC","EC2","S3","RDS","CloudWatch"],topics:["IAM users, roles, policies, least privilege","VPC: subnets, route tables, NAT, security groups","EC2, Auto Scaling, and Elastic Load Balancers","S3, EBS, and EFS storage choices","RDS and managed databases","Route 53, CloudFront, and ACM certificates","CloudWatch metrics, logs, and alarms"],p:"Host a static site on S3 with CloudFront and a custom domain over HTTPS."},
+{t:"Infrastructure as Code",s:"Replace console clicking with code",tools:["Terraform","CloudFormation","Ansible"],topics:["Terraform basics: providers, resources, variables, outputs","Terraform modules and remote state with locking","Workspaces and per-environment configuration","CloudFormation stacks and change sets","Ansible playbooks, roles, and Vault","Policy checks with tfsec or Checkov"],p:"Build a 3-tier VPC (public frontend, private backend and database) with Terraform modules."},
+{t:"CI/CD pipelines",s:"Ship every change safely and automatically",tools:["Jenkins","GitHub Actions","Docker Hub","SonarQube"],topics:["Pipeline stages: build, test, scan, package, deploy","Jenkins pipelines, agents, and credentials","GitHub Actions workflows and reusable actions","Artifact and image registries (Docker Hub, ECR)","Deploying over SSH and AWS SSM","Blue-green and rolling deployments","Quality gates with SonarQube and unit tests"],p:"Create a Jenkins pipeline that builds an app, pushes an image, and deploys it to a private EC2."},
+{t:"Containers and Kubernetes",s:"Package once, run anywhere",tools:["Docker","Kubernetes","EKS","Helm"],topics:["Dockerfiles, multi-stage builds, and image size","Docker networking, volumes, and Compose","Kubernetes: pods, deployments, services, ingress","ConfigMaps, Secrets, and persistent volumes","Amazon EKS with Terraform and managed node groups","Helm charts and Kustomize","Autoscaling: HPA and Cluster Autoscaler"],p:"Provision EKS with Terraform and deploy a frontend, backend, and MySQL with Helm."},
+{t:"Observability and security",s:"Know what is happening and keep it safe",tools:["Prometheus","Grafana","Trivy","Vault"],topics:["Metrics, logs, and traces: what each one answers","Prometheus and Grafana dashboards and alerting","Centralized logging with ELK or Loki","Image and dependency scanning with Trivy","Secrets management: AWS Secrets Manager, Vault","Network policies, WAF, and Security Hub","Alert routing and on-call basics"],p:"Add Prometheus, Grafana, and a Trivy scan stage to your existing pipeline."},
+{t:"Reliability and platform",s:"Run it at scale, then make it easy for others",tools:["ArgoCD","SRE","FinOps","Multi-account"],topics:["GitOps with ArgoCD or Flux","SLIs, SLOs, and error budgets","Incident response and blameless postmortems","Backup, disaster recovery, and multi-AZ design","AWS Organizations and multi-account landing zones","Cost monitoring and right-sizing","Internal developer platforms and self-service templates"],p:"Run a game day: break a node or an AZ on purpose and write the postmortem."}
+];
+var KEY="devops-roadmap-v1",done={};
+try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+var track=document.getElementById("track");
+STAGES.forEach(function(st,si){
+  var COLORS=["#ff5a5f","#ff9f1c","#d4a20a","#2ec27e","#12a8c0","#4361ee","#9b5de5"];
+  var li=document.createElement("li");li.className="stage";li.id="s"+si;li.style.setProperty("--c",COLORS[si%COLORS.length]);
+  var h='<span class="dot">'+(si+1)+'</span><details'+(si===0?' open':'')+'><summary><div><h2>'+st.t+'</h2><p>'+st.s+'</p></div><span class="count"></span></summary><div class="body"><div class="tools">';
+  st.tools.forEach(function(t){h+='<b>'+t+'</b>'});
+  h+='</div><ul class="topics">';
+  st.topics.forEach(function(tp,ti){var id=si+"-"+ti;h+='<li><label><input type="checkbox" data-id="'+id+'"'+(done[id]?' checked':'')+'><span>'+tp+'</span></label></li>'});
+  h+='</ul><p class="proj"><strong>Project:</strong> '+st.p+'</p></div></details>';
+  li.innerHTML=h;track.appendChild(li);
+});
+function update(){
+  var total=0,got=0;
+  STAGES.forEach(function(st,si){
+    var n=st.topics.length,c=0;
+    st.topics.forEach(function(_,ti){if(done[si+"-"+ti])c++});
+    total+=n;got+=c;
+    var li=document.getElementById("s"+si);
+    li.className="stage"+(c===n?" done":c>0?" part":"");
+    li.querySelector(".count").textContent=c+" of "+n;
+  });
+  var p=Math.round(got/total*100);
+  document.getElementById("fill").style.width=p+"%";
+  document.getElementById("pct").textContent=p+"%";
+  document.getElementById("pbar").setAttribute("aria-valuenow",p);
+}
+track.addEventListener("change",function(e){
+  var id=e.target.getAttribute("data-id");if(!id)return;
+  if(e.target.checked)done[id]=1;else delete done[id];
+  save();update();
+});
+document.getElementById("reset").addEventListener("click",function(){
+  done={};save();
+  document.querySelectorAll("input[type=checkbox]").forEach(function(c){c.checked=false});
+  update();
+});
+update();
+</script>
+</body>
+</html>
