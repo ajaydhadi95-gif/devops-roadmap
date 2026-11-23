@@ -1,0 +1,52 @@
+
+name: HTML Website S3 Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy HTML to AWS S3
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Verify HTML
+      - name: Verify Project Files
+        run: |
+          set -e
+          test -f index.html
+          echo "HTML file found successfully"
+
+      # Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      # Verify AWS Access
+      - name: Verify AWS Access
+        run: |
+          aws sts get-caller-identity
+
+      # Deploy to S3
+      - name: Deploy Website to S3
+        run: |
+          aws s3 sync . s3://github-actions-html-deploy-2026 \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*"
+
+      # Success
+      - name: Deployment Successful
+        run: |
+          echo "Website deployed successfully!"
