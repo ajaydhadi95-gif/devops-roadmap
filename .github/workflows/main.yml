@@ -14,18 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Code
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Verify HTML
       - name: Verify Project Files
         run: |
           set -e
-          test -f index.html
+          test -f "DevOps Roadmap (1).html"
           echo "HTML file found successfully"
 
-      # Configure AWS Credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -33,20 +30,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # Verify AWS Access
       - name: Verify AWS Access
         run: |
           aws sts get-caller-identity
 
-      # Deploy to S3
       - name: Deploy Website to S3
         run: |
-          aws s3 sync . s3://github-actions-html-deploy-2026 \
-            --delete \
-            --exclude ".git/*" \
-            --exclude ".github/*"
+          aws s3 cp "DevOps Roadmap (1).html" \
+            s3://github-actions-html-deploy-2026/index.html \
+            --content-type "text/html"
 
-      # Success
       - name: Deployment Successful
         run: |
           echo "Website deployed successfully!"
