@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DevOps Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef3f6;--surface:#fff;--ink:#14213d;--muted:#5b6b82;--line:#c5d2de;--accent:#0b7a75;--accent-ink:#fff;--mark:#f2a900;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -52,6 +52,49 @@ details.ex{background:none;border:0;border-radius:0;box-shadow:none;margin:0 0 8
 .ex p{margin:6px 0;font-size:.95rem}
 .ex pre{margin:0;padding:12px 14px;background:#101a2c;color:#e6eef7;border-radius:10px;border-left:4px solid var(--c);overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
 .mist{margin-top:8px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,#ff5a5f 15%,transparent)}
+.deep{margin-top:60px;padding-top:30px;border-top:4px dashed var(--line)}
+.deep h2{font:800 clamp(1.8rem,5vw,2.6rem)/1.1 "Bricolage Grotesque",sans-serif;margin:0 0 8px;color:#4361ee}
+.jump{display:inline-block;margin:0 0 22px;font-weight:500;color:#4361ee}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 30px;color:var(--muted)}
+.flow span{padding:6px 12px;border-radius:999px;font-weight:500;font-size:.88rem;color:#fff;background:var(--c)}
+.stp{display:grid;grid-template-columns:44px 1fr;gap:14px;margin-bottom:24px;min-width:0}
+.stp>div{min-width:0}
+.stp .n{width:44px;height:44px;border-radius:12px;background:var(--c);color:#fff;display:grid;place-items:center;font:800 1.2rem "Bricolage Grotesque",sans-serif}
+.stp h3{margin:0 0 4px;font:700 1.2rem "Bricolage Grotesque",sans-serif;color:var(--c)}
+.stp p{margin:4px 0 8px}
+.deep pre{margin:8px 0;padding:12px 14px;background:#101a2c;color:#e6eef7;border-radius:10px;border-left:4px solid var(--c);overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.deep ul{margin:6px 0;padding-left:20px}
+.fix{padding:10px 14px;margin-bottom:8px;border-radius:10px;background:color-mix(in srgb,#ff5a5f 12%,var(--surface));border-left:5px solid #ff5a5f}
+.fix b{display:block}
+.tip{padding:12px 16px;border-radius:12px;background:color-mix(in srgb,#2ec27e 14%,var(--surface));border-left:5px solid #2ec27e}
+.wrap{display:none}
+.page{max-width:820px;margin:28px auto 110px;padding:44px 48px;background:var(--surface);border-radius:4px 14px 14px 4px;border-left:18px solid var(--c);box-shadow:0 22px 50px rgba(20,33,61,.28);position:relative;font:17px/1.75 Lora,Georgia,serif}
+.page[hidden]{display:none}
+.page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,rgba(0,0,0,.14),transparent);pointer-events:none}
+.page p{margin:0 0 14px}
+.chno{font:700 .85rem "Bricolage Grotesque",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--c)}
+.chtitle{font:800 clamp(2.2rem,6vw,3.4rem)/1.05 "Bricolage Grotesque",sans-serif;margin:4px 0 8px}
+.chsub{font-style:italic;color:var(--muted);font-size:1.15rem}
+.sec{font:700 1.4rem "Bricolage Grotesque",sans-serif;margin:36px 0 8px;display:flex;gap:10px;align-items:baseline;border-top:1px solid var(--line);padding-top:22px}
+.sec span{color:var(--c)}
+.page pre{margin:8px 0 14px;padding:12px 14px;background:#101a2c;color:#e6eef7;border-radius:10px;border-left:4px solid var(--c);overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.page .mist{margin:12px 0 0}.page .proj{margin:30px 0 0}
+.page .deep{margin-top:0;padding-top:0;border-top:0}
+.ptitle{font:800 2.4rem "Bricolage Grotesque",sans-serif;margin:0 0 20px}
+.toc{list-style:none;margin:0;padding:0}
+.toc a{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dotted var(--line);text-decoration:none;color:var(--ink);font-size:1.1rem}
+.toc a:hover .tt{color:var(--c)}
+.tn{width:36px;height:36px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 .95rem "Bricolage Grotesque",sans-serif;flex:none}
+.tt{flex:1;font-weight:600}.tp{color:var(--muted);font-size:.9rem}
+.cover{min-height:68vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.stripe{width:220px;height:8px;border-radius:4px;background:linear-gradient(90deg,#ff5a5f,#ff9f1c,#f4c20d,#2ec27e,#12b5cb,#4361ee,#9b5de5);margin:10px 0 22px}
+.start{padding:12px 28px;border:0;border-radius:999px;background:#4361ee;color:#fff;font:700 1rem "Bricolage Grotesque",sans-serif;margin-top:12px}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line)}
+.nav button{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:500}
+.nav button:disabled{opacity:.4;cursor:default}
+.nav .lbl{flex:1;text-align:center;font-size:.9rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav .pg{position:absolute;left:0;top:-3px;height:3px;width:0;background:linear-gradient(90deg,#ff5a5f,#ff9f1c,#f4c20d,#2ec27e,#12b5cb,#4361ee,#9b5de5)}
+@media (max-width:600px){.page{margin:12px 8px 100px;padding:26px 18px;border-left-width:10px;font-size:16px}.nav .lbl{display:none}.nav{justify-content:space-between}}
 footer{margin-top:40px;color:var(--muted);font-size:.9rem}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
@@ -60,14 +103,112 @@ footer{margin-top:40px;color:var(--muted);font-size:.9rem}
 <div class="wrap">
   <h1>DevOps roadmap</h1>
   <p class="lede">Seven stages from Linux basics to running production platforms on AWS. Tick topics off as you learn them; your progress stays in this browser.</p>
+  <a class="jump" href="#jenkins">Jump to the Jenkins CI/CD guide &darr;</a>
   <div class="top">
     <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" id="pbar"><i id="fill"></i></div>
     <span class="pct" id="pct">0%</span>
     <button class="reset" id="reset" type="button">Reset progress</button>
   </div>
   <ol class="track" id="track"></ol>
-  <footer>Build one project per stage and push it to GitHub. A visible repo beats a long list of certificates.</footer>
+  <section class="deep" id="jenkins">
+<h2>CI/CD with Jenkins, step by step</h2>
+<p class="lede">CI (continuous integration) builds and tests every commit. CD (continuous delivery) ships the tested build to a server. Jenkins is the tool that runs this chain for you. Follow the 8 steps below to build it yourself.</p>
+<div class="flow"><span style="--c:#ff5a5f">Developer</span>&rsaquo;<span style="--c:#ff9f1c">GitHub</span>&rsaquo;<span style="--c:#d4a20a">Webhook</span>&rsaquo;<span style="--c:#2ec27e">Jenkins EC2</span>&rsaquo;<span style="--c:#12a8c0">Build + Test</span>&rsaquo;<span style="--c:#4361ee">Docker Hub</span>&rsaquo;<span style="--c:#9b5de5">App EC2</span></div>
+
+<div class="stp" style="--c:#ff5a5f"><div class="n">1</div><div><h3>Launch the Jenkins server</h3>
+<p>Create an Ubuntu EC2 (t3.medium is comfortable). In its security group allow port 22 from your IP only, and port 8080 for the Jenkins web page. Then install Java and Jenkins by following the official Linux guide at jenkins.io, and start it.</p>
+<pre><code>sudo systemctl enable --now jenkins
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+# open http://SERVER_IP:8080 and paste that password</code></pre></div></div>
+
+<div class="stp" style="--c:#ff9f1c"><div class="n">2</div><div><h3>Install Docker and give Jenkins access</h3>
+<p>Jenkins runs docker commands, so its user must be in the docker group. Restart Jenkins after this change.</p>
+<pre><code>sudo apt install -y docker.io
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins</code></pre></div></div>
+
+<div class="stp" style="--c:#d4a20a"><div class="n">3</div><div><h3>Install the plugins</h3>
+<p>Manage Jenkins &rarr; Plugins &rarr; Available. Install these:</p>
+<ul><li><b>Git</b> and <b>GitHub</b> to pull code and receive webhooks</li><li><b>Pipeline</b> to run a Jenkinsfile</li><li><b>Docker Pipeline</b> for docker steps</li><li><b>SSH Agent</b> to deploy over SSH</li></ul></div></div>
+
+<div class="stp" style="--c:#2ec27e"><div class="n">4</div><div><h3>Add credentials</h3>
+<p>Manage Jenkins &rarr; Credentials &rarr; Global &rarr; Add. Never write passwords inside the Jenkinsfile.</p>
+<ul><li><b>dockerhub-creds</b>: type Username with password. Use a Docker Hub access token as the password.</li><li><b>ec2-ssh-key</b>: type SSH Username with private key. Paste the key of the app server.</li></ul>
+<p>The ID you type here must match the ID used in the Jenkinsfile exactly.</p></div></div>
+
+<div class="stp" style="--c:#12a8c0"><div class="n">5</div><div><h3>Write the Jenkinsfile</h3>
+<p>Save this file named <b>Jenkinsfile</b> in the root of your repo. Each stage is one step of the pipeline: checkout, build and test, image build, push, deploy.</p>
+<pre><code>pipeline {
+  agent any
+  environment {
+    IMAGE = 'myuser/app'
+    TAG   = "${BUILD_NUMBER}"
+  }
+  stages {
+    stage('Checkout') {
+      steps { git branch: 'main', url: 'https://github.com/myuser/app.git' }
+    }
+    stage('Build and Test') {
+      steps { sh 'npm ci &amp;&amp; npm test &amp;&amp; npm run build' }
+    }
+    stage('Docker Build') {
+      steps { sh 'docker build -t $IMAGE:$TAG .' }
+    }
+    stage('Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
+            usernameVariable: 'U', passwordVariable: 'P')]) {
+          sh 'echo $P | docker login -u $U --password-stdin'
+          sh 'docker push $IMAGE:$TAG'
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sshagent(['ec2-ssh-key']) {
+          sh '''ssh -o StrictHostKeyChecking=no ubuntu@10.0.1.10 "
+            docker pull $IMAGE:$TAG &amp;&amp;
+            docker rm -f app || true
+            docker run -d --name app -p 80:80 $IMAGE:$TAG"'''
+        }
+      }
+    }
+  }
+  post {
+    success { echo 'Deployed' }
+    failure { echo 'Failed, check the console output' }
+  }
+}</code></pre>
+<p>For a private EC2 with no SSH, replace the deploy step with AWS SSM:</p>
+<pre><code>aws ssm send-command --instance-ids i-0abc --document-name AWS-RunShellScript \
+  --parameters 'commands=["docker pull myuser/app:1.0","docker rm -f app || true","docker run -d --name app -p 8080:8080 myuser/app:1.0"]'</code></pre></div></div>
+
+<div class="stp" style="--c:#4361ee"><div class="n">6</div><div><h3>Create the pipeline job</h3>
+<ul><li>Dashboard &rarr; New Item &rarr; name it, choose <b>Pipeline</b></li><li>Pipeline definition: <b>Pipeline script from SCM</b></li><li>SCM: Git, paste your repo URL, branch <b>*/main</b></li><li>Script Path: <b>Jenkinsfile</b></li><li>Tick <b>GitHub hook trigger for GITScm polling</b>, then Save</li></ul></div></div>
+
+<div class="stp" style="--c:#9b5de5"><div class="n">7</div><div><h3>Connect GitHub with a webhook</h3>
+<p>In your GitHub repo: Settings &rarr; Webhooks &rarr; Add webhook.</p>
+<pre><code>Payload URL:  http://SERVER_IP:8080/github-webhook/
+Content type: application/json
+Event:        Just the push event</code></pre>
+<p>Now every push starts the pipeline automatically.</p></div></div>
+
+<div class="stp" style="--c:#ff5a5f"><div class="n">8</div><div><h3>Run it and check the result</h3>
+<p>Push a small change. Open the job, click the build number, then <b>Console Output</b> to watch each stage. When it ends with SUCCESS, open <b>http://APP_SERVER_IP</b> and you should see the new version.</p></div></div>
+
+<h3 style="font:800 1.5rem 'Bricolage Grotesque',sans-serif;margin:34px 0 12px">Common errors and fixes</h3>
+<div class="fix"><b>docker: permission denied</b>Jenkins user is not in the docker group. Run step 2 and restart Jenkins.</div>
+<div class="fix"><b>Webhook does not start the build</b>Port 8080 is blocked in the security group, or the URL misses the trailing slash. Check Recent Deliveries in GitHub.</div>
+<div class="fix"><b>Host key verification failed</b>Add -o StrictHostKeyChecking=no, or add the server to known_hosts.</div>
+<div class="fix"><b>Credentials not found</b>The credentialsId in the Jenkinsfile does not match the ID in Jenkins.</div>
+<div class="fix"><b>No space left on device</b>Old images fill the disk. Run docker system prune -f and clean old workspaces.</div>
+
+<div class="tip"><b>Good habits:</b> keep the Jenkinsfile in Git, tag images with the build number, use a Docker Hub access token not your password, restrict port 8080 where you can, and back up /var/lib/jenkins.</div>
+</section>
+
+<footer>Build one project per stage and push it to GitHub. A visible repo beats a long list of certificates.</footer>
 </div>
+<div id="book"><div class="pages"></div><nav class="nav" aria-label="Book navigation"><i class="pg"></i><button type="button" id="prev">&larr; Previous</button><span class="lbl" id="lbl"></span><button type="button" id="next">Next &rarr;</button></nav></div>
 <script>
 var STAGES=[
 {t:"Foundations",s:"The base everything else sits on",tools:["Linux","Bash","Git","Python"],topics:["Linux filesystem, permissions, processes, systemd","Networking: TCP/IP, DNS, HTTP/HTTPS, load balancing, firewalls","Bash scripting and cron","Git branching, pull requests, merge conflicts","Basic Python or Go for automation","SSH, keys, and secure remote access"],p:"Write a Bash script that backs up a folder and uploads it to S3 on a schedule."},
@@ -328,6 +469,40 @@ document.getElementById("reset").addEventListener("click",function(){
   update();
 });
 update();
+</script>
+<script>
+(function(){
+var C=['#ff5a5f','#ff9f1c','#d4a20a','#2ec27e','#12a8c0','#4361ee','#9b5de5'];
+var wrap=document.querySelector('#book .pages'),pages=[];
+function add(name,label,color,html){var s=document.createElement('section');s.className='page';s.hidden=true;s.style.setProperty('--c',color);s.innerHTML=html;wrap.appendChild(s);pages.push({name:name,label:label,el:s});return s}
+add('cover','Cover','#4361ee',`<div class='cover'><p class='chno'>A practical handbook</p><h1>DevOps<br>Roadmap</h1><p class='chsub'>From Linux basics to production on AWS</p><div class='stripe'></div><p>8 chapters, 47 topics, real commands and examples</p><button class='start' type='button' data-go='contents'>Start reading &rarr;</button></div>`);
+var toc=`<h2 class='ptitle'>Contents</h2><ol class='toc'>`;
+STAGES.forEach(function(st,i){toc+=`<li><a href='#chapter-${i+1}' style='--c:${C[i]}'><span class='tn'>${i+1}</span><span class='tt'>${st.t}</span><span class='tp'>p. ${i+3}</span></a></li>`});
+toc+=`<li><a href='#chapter-8' style='--c:#4361ee'><span class='tn'>8</span><span class='tt'>CI/CD with Jenkins, step by step</span><span class='tp'>p. 10</span></a></li></ol>`;
+add('contents','Contents','#9b5de5',toc);
+STAGES.forEach(function(st,si){
+  var h=`<p class='chno'>Chapter ${si+1}</p><h2 class='chtitle'>${st.t}</h2><p class='chsub'>${st.s}</p><div class='tools'>`;
+  st.tools.forEach(function(t){h+=`<b>${t}</b>`});
+  h+=`</div>`;
+  st.topics.forEach(function(tp,ti){
+    var d=DETAILS[si][ti],x=EXTRA[si][ti];
+    h+=`<h3 class='sec'><span>${si+1}.${ti+1}</span> ${tp}</h3><p>${esc(d[0])}</p><p><strong>Why it matters.</strong> ${esc(x[0])}</p><pre><code>${esc(d[1])}</code></pre><p class='mist'><strong>Common mistake.</strong> ${esc(x[1])}</p>`;
+  });
+  h+=`<div class='proj'><strong>Practice project.</strong> ${st.p}</div>`;
+  add('chapter-'+(si+1),'Chapter '+(si+1)+': '+st.t,C[si],h);
+});
+var p8=add('chapter-8','Chapter 8: CI/CD with Jenkins','#4361ee',`<p class='chno'>Chapter 8</p>`);
+p8.appendChild(document.getElementById('jenkins'));
+add('the-end','The end','#2ec27e',`<h2 class='ptitle'>Where to go next</h2><p>Reading is only half the work. Use these steps to make it stick.</p><ul><li>Build the practice project at the end of each chapter and push it to GitHub with a clear README.</li><li>Re-read the Common mistake notes before an interview. They are the questions people ask.</li><li>Take one chapter every week and finish all eight in two months.</li></ul><button class='start' type='button' data-go='contents'>Back to contents</button>`);
+var cur=0,lbl=document.getElementById('lbl'),pv=document.getElementById('prev'),nx=document.getElementById('next'),bar=document.querySelector('.nav .pg');
+function show(i){cur=i;pages.forEach(function(p,k){p.el.hidden=k!==i});lbl.textContent='Page '+(i+1)+' of '+pages.length+' - '+pages[i].label;pv.disabled=i===0;nx.disabled=i===pages.length-1;bar.style.width=((i+1)/pages.length*100)+'%';window.scrollTo(0,0)}
+function go(i){location.hash=pages[i].name}
+function route(){var n=location.hash.slice(1),i=0;pages.forEach(function(p,k){if(p.name===n)i=k});show(i)}
+pv.onclick=function(){go(cur-1)};nx.onclick=function(){go(cur+1)};
+document.getElementById('book').addEventListener('click',function(e){var g=e.target.getAttribute&&e.target.getAttribute('data-go');if(g)location.hash=g});
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pages.length-1)go(cur+1);if(e.key==='ArrowLeft'&&cur>0)go(cur-1)});
+window.addEventListener('hashchange',route);route();
+})();
 </script>
 </body>
 </html>
